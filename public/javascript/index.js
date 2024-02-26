@@ -1,38 +1,32 @@
-const charactersAPI = new APIHandler('http://localhost:8000');
-const characterContainer = document.getElementById('characters-container');
+const { response } = require("express");
 
-
+//const charactersAPI = new APIHandler('http://localhost:8000');
+const charactersAPI = new APIHandler(
+  "https://ih-crud-api.herokuapp.com"
+)
 
 window.addEventListener('load', () => {
-  document.getElementById('fetch-all').addEventListener('click', async function (event) {
-    try {
-      const response = await charactersAPI.getFullList();
-      console.log('Full list', response.data);
-    } catch (error) {
-      console.error('Error while fetching full list', error);
-    }
-  });
-
-      
-  document.getElementById('fetch-one').addEventListener('click', async function (event) {
-    const characterId = document.querySelector('[name="character-id"]').value;
-    try {
-      const response = await charactersAPI.getOneRegister(characterId);
-      console.log('Single Character', response.data);
-    } catch (error) {
-      console.error('Error while fetching single character', error);
-    }
+  document
+  .getElementById('fetch-all')
+  .addEventListener('click', async function (event) {
+    const allCharacters = await charactersAPI.getFullList()
+    console.log('All Characters:', allCharacters);
+  })
+  
+  document
+  .getElementById('fetch-one')
+  .addEventListener('click', async function (event) {
+      const oneCharacter = charactersAPI.getOneRegister(document.querySelector('[name="character-id"]').value);
+      console.log('Single Character', oneCharacter);
   });
 
   document.getElementById('delete-one').addEventListener('click', async function (event) {
-    const characterIdToDelete = document.querySelector('[name="character-id-delete"]').value;
-    try {
-      const response = await charactersAPI.deleteOneRegister(characterIdToDelete);
-      console.log('Character Deleted:', response.data);
-    } catch (error) {
-      console.error('Error while deleting character', error);
-    }
-  });
+    const characterId = charactersAPI.deleteOneRegister(document.querySelector('[name="character-id-delete"]').value);
+        //const deleteResponse = await charactersAPI.deleteOneRegister(characterId);
+        console.log(characterId)
+        console.log('Character Deleted:', response.data);
+});
+
 
   document.getElementById('edit-character-form').addEventListener('submit', async function (event) {
     event.preventDefault();

@@ -1,15 +1,25 @@
-const { default: axios } = require("axios");
-
 class APIHandler {
-  constructor () {
+  constructor (baseUrl) {
+    this.BASE_URL = baseUrl;
     this.api = axios.create({
-      baseUrl: 'http://localhost:8000'
-    });
+      baseURL: this.BASE_URL
+    })
   }
 
-  getFullList () {
+  getFullList() {
     return this.api.get('/characters')
+        .then((response) => {
+            console.log('All Characters Response:', response); // Log the entire response object
+            console.log('All Characters Data:', response.data); // Log the data property of the response
+
+            return response.data; // Return the data for further processing if needed
+        })
+        .catch((error) => {
+            console.error('Error while fetching all characters', error);
+            throw error; // Rethrow the error to handle it outside of this method if necessary
+        });
 }
+
 
   getOneRegister (characterId) {
     return this.api.get(`/characters/${characterId}`)
@@ -28,4 +38,3 @@ class APIHandler {
   }
 }
 
-module.exports = APIHandler;
